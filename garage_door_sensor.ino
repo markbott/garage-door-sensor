@@ -13,10 +13,28 @@ const int echoPin = 0;  //D3
 long duration;
 int distance;
 
+void blink(int onDuration, int offDuration, int total) {
+  int timer = 0;
+  while(timer < total) {
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(onDuration);
+    digitalWrite(LED_BUILTIN, HIGH);
+
+    timer += onDuration;
+    
+    if(timer + offDuration <= total) {
+      delay(offDuration);
+    }
+
+    timer += offDuration;
+  }
+}
 
 void setup() {
   Serial.begin(115200); // Starts the serial communication
   delay(10);
+
+  pinMode(LED_BUILTIN, OUTPUT);
 
   // Connect to WAP
   Serial.print("Connecting to ");
@@ -24,7 +42,7 @@ void setup() {
   WiFi.begin(ssid, password);
 
   while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
+    blink(100, 100, 500);
     Serial.print(".");
   }
 
@@ -39,7 +57,7 @@ void setup() {
   Serial.print("Waiting for NTP time sync: ");
   time_t now = time(nullptr);
   while (now < 8 * 3600 * 2) {
-    delay(500);
+    blink(200, 100, 500);
     Serial.print(".");
     now = time(nullptr);
   }
@@ -52,6 +70,7 @@ void setup() {
   pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
   pinMode(echoPin, INPUT); // Sets the echoPin as an Input
   Serial.println("Setup complete");
+  blink(50, 30, 200);
 }
 
 void loop() {
