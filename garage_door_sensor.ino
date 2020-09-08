@@ -98,16 +98,15 @@ void loop() {
   Serial.println(distanceStr);
 
 
-  const char * host = "p0z5aenv1f.execute-api.us-east-1.amazonaws.com";
   const int httpsPort = 443;
   
   WiFiClientSecure client;
   Serial.print("Connecting to ");
-  Serial.println(host);
+  Serial.println(apiHost);
  
   client.setInsecure();
   
-  if (!client.connect(host, httpsPort)) {
+  if (!client.connect(apiHost, httpsPort)) {
     Serial.println("Connection failed");
     return;
   }
@@ -117,7 +116,7 @@ void loop() {
   Serial.println(url);
 
   client.print(String("POST ") + url + " HTTP/1.1\r\n" +
-               "Host: " + host + "\r\n" +
+               "Host: " + apiHost + "\r\n" +
                "X-API-Key: " + apiKey + "\r\n" +
                "doorstatus: " + distanceStr + "\r\n" +
                "Content-Type: application/json\r\n" +
